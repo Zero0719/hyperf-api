@@ -1,36 +1,105 @@
-# Introduction
+# Hyperf-Api
 
-This is a skeleton application using the Hyperf framework. This application is meant to be used as a starting place for those looking to get their feet wet with Hyperf Framework.
+基于 `hyperf` 快速开发 `api` 项目
 
-# Requirements
+## 环境依赖
 
-Hyperf has some requirements for the system environment, it can only run under Linux and Mac environment, but due to the development of Docker virtualization technology, Docker for Windows can also be used as the running environment under Windows.
+* php >= 7.4
+* swoole >= 4.8
+* redis
 
-The various versions of Dockerfile have been prepared for you in the [hyperf/hyperf-docker](https://github.com/hyperf/hyperf-docker) project, or directly based on the already built [hyperf/hyperf](https://hub.docker.com/r/hyperf/hyperf) Image to run.
+## 安装
 
-When you don't want to use Docker as the basis for your running environment, you need to make sure that your operating environment meets the following requirements:  
+```git 
+git clone https://github.com/Zero0719/hyperf-api.git
+composer install
+```
 
- - PHP >= 7.3
- - Swoole PHP extension >= 4.5，and Disabled `Short Name`
- - OpenSSL PHP extension
- - JSON PHP extension
- - PDO PHP extension （If you need to use MySQL Client）
- - Redis PHP extension （If you need to use Redis Client）
- - Protobuf PHP extension （If you need to use gRPC Server of Client）
+## 特性
 
-# Installation using Composer
+* 统一响应
+* CORS 中间件
+* 请求日志中间件
+* 日志封装
+* JWT
+* 异常
 
-The easiest way to create a new Hyperf project is to use Composer. If you don't have it already installed, then please install as per the documentation.
+### 配置文件
 
-To create your new Hyperf project:
+`config/autoload/api.php`
 
-$ composer create-project hyperf/hyperf-skeleton path/to/install
+### 响应
 
-Once installed, you can run the server immediately using the command below.
+响应统一返回 `json` 格式数据
 
-$ cd path/to/install
-$ php bin/hyperf.php start
+如果需要在响应中返回 `requestId`, 请在 `.env` 文件中添加 `WITH_REQUEST_ID=true`
 
-This will start the cli-server on port `9501`, and bind it to all network interfaces. You can then visit the site at `http://localhost:9501/`
+```php 
+use App\Util\ResponseUtil;
 
-which will bring up Hyperf default home page.
+// 成功响应
+return ResponseUtil::success([
+    'user' => 'test1'
+]);
+
+// 失败响应
+return ResponseUtil::error('some thing was wrong.');
+
+// 更多的自定义参数响应
+// 参数对应: 自定义状态码 响应数组数据 响应文本 响应http状态码 响应headers
+return ResponseUtil::send(2, ['test' => 1], 'message', 404, ['Authoirzation' => 'xxxxxxxx']);
+```
+
+### 中间件的使用
+
+按需加载即可
+
+`config/autoload/middlewares.php`
+
+```php 
+return [
+    'http' => [
+        \App\Middleware\RequestMiddleware::class, // 请求日志中间件
+        \App\Middleware\CorsMiddleware::class, // 跨域处理中间件
+    ],
+];
+```
+
+### 使用日志
+
+```php 
+use App\Util\LogUtil;
+
+$logger = LogUtil::get('app')->info('info', $somedata);
+```
+
+### JWT 使用
+
+在需要的地方打开中间件,比如路由组或者全局
+
+修改`jwt.php`配置文件中的不检查路由
+
+打开`exceptions.php`中对 `jwt`相关的异常捕捉
+
+```php 
+use App\Util\JWTUtil;
+
+$tokenData = JWTUtil::generateToken(['uid' => '1', 'username' => 'test']); // 注意 uid 键是必须的
+```
+
+### 异常
+
+自定义了一个业务异常和业务异常处理器，建议业务可控的错误，抛出该业务异常并统一处理响应
+
+`App\Exception\BusinessException.php`
+
+`App\Exception\BusinessExceptionHandler.php`
+
+```php 
+throw new BusinessExcption('you do some thing wrong.')
+```
+
+对于所有未捕捉的异常统一交给 `App\Exception\AppExceptionHandler.php` 处理
+
+对于验证器的异常进行了统一处理 `App\Exception\ValidationExceptionHander.php`
+

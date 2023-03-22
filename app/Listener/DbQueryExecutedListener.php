@@ -30,7 +30,7 @@ class DbQueryExecutedListener implements ListenerInterface
 
     public function __construct(ContainerInterface $container)
     {
-        $this->logger = $container->get(LoggerFactory::class)->get('sql');
+        $this->logger = $container->get(LoggerFactory::class)->get('sql', 'sql');
     }
 
     public function listen(): array
@@ -46,14 +46,23 @@ class DbQueryExecutedListener implements ListenerInterface
     public function process(object $event): void
     {
         if ($event instanceof QueryExecuted) {
+            $env = config('app_env', 'dev');
             $sql = $event->sql;
             if (! Arr::isAssoc($event->bindings)) {
                 foreach ($event->bindings as $key => $value) {
                     $sql = Str::replaceFirst('?', "'{$value}'", $sql);
                 }
             }
-
-            $this->logger->info(sprintf('[%s] %s', $event->time, $sql));
+            switch ($env) {
+                case 'dev':
+                    $this->logger->info(sprintf('[%s] %s', $event->time, $sql));
+                    break;
+                case 'debug':
+                    $this->logger->debug(sprintf('[%s] %s', $event->time, $sql));
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
