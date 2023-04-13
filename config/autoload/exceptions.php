@@ -12,6 +12,7 @@ declare(strict_types=1);
 return [
     'handler' => [
         'http' => [
+            \App\Exception\Handler\ThrottleExceptionHandler::class,
             // \App\Exception\Handler\TokenExceptionHandler::class,
             \App\Exception\Handler\ValidationExceptionHandler::class,
             \App\Exception\Handler\BusinessExceptionHandler::class,

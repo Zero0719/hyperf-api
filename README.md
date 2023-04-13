@@ -23,6 +23,7 @@ composer install
 * 日志封装
 * JWT
 * 异常
+* 限流
 
 ### 配置文件
 
@@ -102,4 +103,24 @@ throw new BusinessExcption('you do some thing wrong.')
 对于所有未捕捉的异常统一交给 `App\Exception\AppExceptionHandler.php` 处理
 
 对于验证器的异常进行了统一处理 `App\Exception\ValidationExceptionHander.php`
+
+### 限流
+
+在使用 `redis` 的基础上增加了限流中间件
+
+`config/autoload/api.php` 的 `throttle` 定义了相关配置
+
+在需要使用的路由中使用中间件即可
+
+`App\Middlewares\ThrottleMiddle`
+
+### 通用方法
+
+封装于 `Util/CommonUtil.php` 中
+
+已有方法
+```php 
+// 获取客户端真实ip
+getRealClientIp();
+```
 
