@@ -1,0 +1,16 @@
+{
+    "name": "zero0719/hyperf-api",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Zero0719\\HyperfApi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "hejiayu",
+            "email": "724412707@qq.com"
+        }
+    ],
+    "require": {}
+}
