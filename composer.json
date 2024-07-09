@@ -2,7 +2,7 @@
     "name": "zero0719/hyperf-api",
     "type": "library",
     "description": "An api prototype base on hyperf framework.",
-    "version": "0.0.1",
+    "version": "1.0.1",
     "autoload": {
         "psr-4": {
             "Zero0719\\HyperfApi\\": "src/"
