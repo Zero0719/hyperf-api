@@ -3,7 +3,7 @@
     "type": "library",
     "license": "MIT",
     "description": "An api prototype base on hyperf framework.",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "autoload": {
         "psr-4": {
             "Zero0719\\HyperfApi\\": "src/"
