@@ -10,38 +10,13 @@
 
 ## 安装
 
-todo
+```shell
+composer require zero0719/hyperf-api 
+```
 
 ### 发布配置文件
 
 `php bin/hyperf.php vendor:publish zero0719/hyperf-api`
-
-### 配置中间件
-
-```php
-return [
-    'http' => [
-        \Zero0719\HyperfApi\Middleware\CorsMiddleware::class,
-        \Zero0719\HyperfApi\Middleware\RequestLogMiddleware::class,
-        \Hyperf\Validation\Middleware\ValidationMiddleware::class,
-        \Phper666\JWTAuth\Middleware\JWTAuthDefaultSceneMiddleware::class
-    ],
-];
-```
-
-### 配置异常处理器
-
-```php
-return [
-    'http' => [
-        \Zero0719\HyperfApi\Exception\Handler\ValidationExceptionHandler::class,
-        \Zero0719\HyperfApi\Exception\Handler\JWTExceptionHandler::class,
-        \Zero0719\HyperfApi\Exception\Handler\BusinessExceptionHandler::class,
-        .
-        .
-    ]   
-];
-```
 
 ## 跨域处理
 

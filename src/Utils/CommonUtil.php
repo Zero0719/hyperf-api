@@ -13,4 +13,13 @@ class CommonUtil
         $request = ApplicationContext::getContainer()->get(RequestInterface::class);
         return $request->getHeaderLine('x-real-ip') ?: $request->getHeaderLine('x-forwarded-for') ?: $request->getServerParams()['remote_addr'];
     }
+
+    /**
+     * will remove
+     * @return string
+     */
+    public static function test(): string
+    {
+        return 'test';
+    }
 }
