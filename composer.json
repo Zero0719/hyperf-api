@@ -1,6 +1,8 @@
 {
     "name": "zero0719/hyperf-api",
     "type": "library",
+    "description": "An api prototype base on hyperf framework.",
+    "version": "0.0.1",
     "autoload": {
         "psr-4": {
             "Zero0719\\HyperfApi\\": "src/"
@@ -12,5 +14,14 @@
             "email": "724412707@qq.com"
         }
     ],
-    "require": {}
+    "require": {
+        "php": ">=8.3",
+        "hyperf/hyperf": "^3.0",
+        "phper666/jwt-auth": "*"
+    },
+    "extra": {
+        "hyperf": {
+            "config": "Zero0719\\HyperfApi\\ConfigProvider"
+        }
+    }
 }
