@@ -11,7 +11,7 @@ class ConfigProvider
             'publish' => [
                 [
                     'id' => 'config',
-                    'description' => 'The config of redis client.',
+                    'description' => 'The config of hyperf api.',
                     'source' => __DIR__ . '/../publish/api.php',
                     'destination' => BASE_PATH . '/config/autoload/api.php',
                 ],

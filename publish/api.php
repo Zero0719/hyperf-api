@@ -21,5 +21,9 @@ return [
             'channel' => env('REQUEST_LOG_CHANNEL', 'request'),
             'level' => env('REQUEST_LOG_LEVEL', 'info'),
         ]
+    ],
+    
+    'error' => [
+        'log' => env('ERROR_LOG', 'default')
     ]
 ];

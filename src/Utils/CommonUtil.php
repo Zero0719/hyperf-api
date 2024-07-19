@@ -13,4 +13,11 @@ class CommonUtil
         $request = ApplicationContext::getContainer()->get(RequestInterface::class);
         return $request->getHeaderLine('x-real-ip') ?: $request->getHeaderLine('x-forwarded-for') ?: $request->getServerParams()['remote_addr'];
     }
+    
+    public static function getCurrentRouteName(): string
+    {
+        $request = ApplicationContext::getContainer()->get(RequestInterface::class);
+        $dispatched = $request->getAttribute('Hyperf\HttpServer\Router\Dispatched');
+        return $dispatched->handler->options['name'] ?? '';
+    }
 }

@@ -4,9 +4,12 @@
 * 统一响应
 * 验证器统一处理
 * 业务异常&处理器
+* 模型未找到异常处理
+* 应用错误统一处理
 * JWT验证
 * 请求日志记录
 * 常用工具类
+
 
 ## 安装
 
@@ -144,6 +147,36 @@ class IndexController extends \Zero0719\HyperfApi\Controller\BaseController
         return $this->success();
     }   
 }
+```
+
+## 模型未找到异常处理
+
+当我们使用 `Model::findOrFail($id)` 时如果没有对应的模型，会抛出 `ModelNotFoundException` 错误，因为这个逻辑也比较常用，所以我们统一捕捉这个错误，响应消息为 `资源未找到`
+
+`exceptions.php`
+
+```php
+return [
+    .
+    .
+    \Zero0719\HyperfApi\Exception\Handler\ModelNotFoundExceptionHandler::class,
+    .
+]
+```
+
+## 应用错误统一处理
+
+有些未知的错误我们可能没有捕捉到，`hyperf` 的脚手架项目自带了 `AppExceptionHandler.php`，但是响应的结果并不是我们 `api` 项目想要的，所以在这之前进行了统一处理，响应服务出错的消息，并区分环境记录到日志当中。
+
+`exceptions.php`
+
+```php
+return [
+    .
+    .
+    \Zero0719\HyperfApi\Exception\Handler\AppExceptionHandler::class,
+    .
+]
 ```
 
 ## JWT 验证
@@ -306,4 +339,36 @@ class TestRequestInfo extends RequestLogService
 ```php
 // 获取客户端IP
 \Zero0719\HyperfApi\Utils\CommonUtil::getIp();
+```
+
+## 其他
+
+中间件配置
+```php
+return [
+    'http' => [
+        \Zero0719\HyperfApi\Middleware\CorsMiddleware::class,
+        \Zero0719\HyperfApi\Middleware\RequestLogMiddleware::class,
+        \Hyperf\Validation\Middleware\ValidationMiddleware::class
+    ],
+];
+```
+
+jwt中间件建议配合路由组使用
+
+异常处理器配置
+```php
+return [
+    'handler' => [
+        'http' => [
+            \Zero0719\HyperfApi\Exception\Handler\ValidationExceptionHandler::class,
+            \Zero0719\HyperfApi\Exception\Handler\JWTExceptionHandler::class,
+            \Zero0719\HyperfApi\Exception\Handler\ModelNotFoundExceptionHandler::class,
+            \Zero0719\HyperfApi\Exception\Handler\BusinessExceptionHandler::class,
+            \Zero0719\HyperfApi\Exception\Handler\AppExceptionHandler::class,
+            Hyperf\HttpServer\Exception\Handler\HttpExceptionHandler::class,
+            App\Exception\Handler\AppExceptionHandler::class,
+        ],
+    ],
+];
 ```
